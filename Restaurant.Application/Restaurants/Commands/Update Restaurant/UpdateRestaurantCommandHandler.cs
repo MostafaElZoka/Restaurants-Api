@@ -1,0 +1,28 @@
+﻿using AutoMapper;
+using MediatR;
+using Microsoft.Extensions.Logging;
+using Restaurant.Domain.Entities;
+using Restaurant.Domain.Exceptions;
+using Restaurant.Domain.Repositories;
+
+namespace Restaurant.Application.Restaurants.Commands.Update_Restaurant;
+
+public class UpdateRestaurantCommandHandler(IRestaurantRepository restaurantRepository, IMapper mapper,ILogger<UpdateRestaurantCommandHandler> logger) : IRequestHandler<UpdateRestaurantCommand>
+{
+    public async Task Handle(UpdateRestaurantCommand request, CancellationToken cancellationToken)
+    {
+        logger.LogInformation("Updating Restaurant with id {restaurantId} with {@updatedRestaurant}",request.Id,request);
+        var restaurant = await restaurantRepository.GetById(request.Id); 
+        if (restaurant == null)
+        {
+            //return false;
+           throw new NotFoundExceptionHandler(nameof(request),request.Id.ToString());
+        }
+        var mapped = mapper.Map(request,restaurant); // this applies the mapping to the current object
+        //restaurant.Name = request.Name;
+        //restaurant.Description = request.Description;
+        //restaurant.HasDelivery = request.HasDelivery;
+        await restaurantRepository.Update(mapped);
+        //return true;
+    }
+}

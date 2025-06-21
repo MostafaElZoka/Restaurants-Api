@@ -1,0 +1,27 @@
+@Restaurant_HostAddress = https://localhost:7089
+
+GET {{Restaurant_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
+
+GET {{Restaurant_HostAddress}}/api/restaurants
+
+###
+
+GET {{Restaurant_HostAddress}}/{id}
+
+###
+POST {{Restaurant_HostAddress}}/api/restaurants/{restaurantId}/dishes
+Content-Type: application/json
+
+{
+{
+  "name": "Spaghetti Bolognese",
+  "description": "Classic Italian pasta with a rich beef and tomato sauce, topped with parmesan cheese.",
+  "price": 10,
+  "kiloCalories": 720
+}
+}
+
+###

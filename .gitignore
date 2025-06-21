@@ -1,0 +1,24 @@
+# Ignore bin, obj, Debug folders in all subdirectories
+**/bin/
+**/obj/
+**/Debug/
+**/debug/
+
+# Visual Studio and system files
+.vs/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# Build logs and result files
+*.log
+TestResults/
+*.trx
+
+# Rider/JetBrains
+.idea/
+
+# OS-specific
+.DS_Store
+Thumbs.db
