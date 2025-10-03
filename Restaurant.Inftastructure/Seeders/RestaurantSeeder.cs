@@ -21,7 +21,8 @@ internal class RestaurantSeeder(RestaurantDbContext db): IRestaurantSeeder
 
             if(!db.Roles.Any())
             {
-                db.Roles.AddRange(GetRoles());
+                var roles = GetRoles();
+                db.Roles.AddRange(roles);
                 await db.SaveChangesAsync();
 
             }
@@ -32,9 +33,18 @@ internal class RestaurantSeeder(RestaurantDbContext db): IRestaurantSeeder
     {
         List<IdentityRole> roles =
                     [
-                        new IdentityRole(UserRoles.Admin),
-                        new IdentityRole(UserRoles.Owner),
+                        new IdentityRole(UserRoles.Admin)
+                        {
+                            NormalizedName = UserRoles.Admin.ToUpper()// we must initaialize the NormalizedName column because it is the one that is use by the identity package to search and update etc
+                        },
+                        new IdentityRole(UserRoles.Owner)
+                        {
+                            NormalizedName = UserRoles.Owner.ToUpper()
+                        },
                         new IdentityRole(UserRoles.User)
+                        {
+                            NormalizedName = UserRoles.User.ToUpper() 
+                        }
                     ];
         return roles;
     }

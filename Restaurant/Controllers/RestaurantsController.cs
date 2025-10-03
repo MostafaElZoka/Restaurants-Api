@@ -9,6 +9,7 @@ using Restaurant.Application.Restaurants.Commands.Update_Restaurant;
 using Restaurant.Application.Restaurants.DTOs;
 using Restaurant.Application.Restaurants.Queries;
 using Restaurant.Application.Restaurants.Queries.Get_Restaurant_By_Id;
+using Restaurant.Domain.Constants;
 using Restaurant.Domain.Entities;
 using System.Threading.Tasks;
 
@@ -16,7 +17,7 @@ namespace Restaurant.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize]
+    [Authorize]//as long as it has no other options then the annotation here is for authentication 
     public class RestaurantsController(IMediator mediator) : ControllerBase
     {
         [HttpGet]
@@ -39,6 +40,7 @@ namespace Restaurant.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles =UserRoles.Owner)]//only owners can create restaurants 
         public async Task<IActionResult> CreateRestaurant([FromBody] CreateRestaurantCommand command)
         {
             int id = await mediator.Send(command);
