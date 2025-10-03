@@ -9,4 +9,6 @@ public class User:IdentityUser
 {
     [Required]
     public string FullName { get; set; } = default!;
+    public DateOnly? DateOfBirth { get; set; }
+    public string? Nationality { get; set; }
 }

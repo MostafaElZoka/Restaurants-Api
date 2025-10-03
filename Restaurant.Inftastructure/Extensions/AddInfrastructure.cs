@@ -35,16 +35,19 @@ public static class ServiceCollectionExtension
 
         services.AddScoped<IJwtTokenGenerator, JwtTokenGenerator>(); 
 
-        services.Configure<JwtSettings>(configuration.GetSection("Jwt"));//maps the jwt settings from the appsettings.json to the jwtsettings class
+        services.Configure<JwtSettings>(configuration.GetSection("JwtSettings"));//maps the jwt settings from the appsettings.json to the jwtsettings class
 
-        var jwtsettings = configuration.GetSection("Jwt").Get<JwtSettings>();
+        var jwtsettings = configuration.GetSection("JwtSettings").Get<JwtSettings>();
 
         services.AddAuthentication(options =>
         {
-            options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-            options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-        }).AddJwtBearer(options =>
+            options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;// instead of using cookies use jwt
+            options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;//if a user hits an unauthorized endpoint let jwt decides what happens (401 unauhtorized)
+            options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;// this is to reverse the incoming token to check whether it is valid or not 
+        }).AddJwtBearer(options => //this to decode the incoming token from client and decode it to find whether it is valid or not
         {
+            options.SaveToken = true;
+            options.RequireHttpsMetadata = false;
             options.TokenValidationParameters = new TokenValidationParameters
             {
                 ValidateIssuer = true,
@@ -53,7 +56,7 @@ public static class ServiceCollectionExtension
                 ValidateLifetime = true,
                 ValidIssuer = jwtsettings.Issuer,
                 ValidAudience = jwtsettings.Audience,
-                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtsettings.Key))
+                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtsettings.SecretKey))
             };
         });
 

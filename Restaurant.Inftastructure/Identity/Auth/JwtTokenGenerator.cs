@@ -22,14 +22,14 @@ public class JwtTokenGenerator(IOptions<JwtSettings> jwtsettings,UserManager<Use
         var roles = await userManager.GetRolesAsync(user);
         var Claims = new List<Claim>
         {
-            new Claim(JwtRegisteredClaimNames.Name,user.Id),
+            new Claim(JwtRegisteredClaimNames.Sub,user.Id),//sub is used for saving the id
             new Claim("fullName", user.FullName), 
             new Claim(JwtRegisteredClaimNames.Email,user.Email),
             new Claim(JwtRegisteredClaimNames.Jti,Guid.NewGuid().ToString()),
         };
         Claims.AddRange(roles.Select(r => new Claim(ClaimTypes.Role, r)));  
 
-        var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_JwtSettings.Key));
+        var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_JwtSettings.SecretKey));
         var creds = new SigningCredentials(key,SecurityAlgorithms.HmacSha256);
 
         var token = new JwtSecurityToken(

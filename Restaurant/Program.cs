@@ -44,6 +44,7 @@ namespace Restaurant
             app.UseSerilogRequestLogging(); //middleware for serilog
             app.UseHttpsRedirection();
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
 
