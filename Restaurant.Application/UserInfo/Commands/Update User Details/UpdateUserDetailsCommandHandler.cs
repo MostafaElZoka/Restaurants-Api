@@ -18,7 +18,10 @@ public class UpdateUserDetailsCommandHandler(IUserContext userContext, IUserStor
         {
             throw new NotFoundExceptionHandler(nameof(user), user!.Id);
         }
+        if(request.Nationality != null)
         dbUser.Nationality = request.Nationality;
+
+        if(request.DateOfBirth != null)
         dbUser.DateOfBirth = request.DateOfBirth;
 
         await userStore.UpdateAsync(dbUser, cancellationToken);

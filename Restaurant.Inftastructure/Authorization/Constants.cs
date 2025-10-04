@@ -4,6 +4,7 @@ namespace Restaurant.Inftastructure.Authorization;
 public static class PolicyNames
 {
     public const string HasNationality = "HasNationlaity";
+    public const string LessThan20 = "LessThan20";
 }
 
 public static class AppClaimsNames

@@ -1,5 +1,6 @@
 ﻿
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -9,6 +10,7 @@ using Restaurant.Application.Authentication;
 using Restaurant.Domain.Entities;
 using Restaurant.Domain.Repositories;
 using Restaurant.Inftastructure.Authorization;
+using Restaurant.Inftastructure.Authorization.Requirments;
 using Restaurant.Inftastructure.DishesRepos;
 using Restaurant.Inftastructure.Identity.Auth;
 using Restaurant.Inftastructure.Presistence;
@@ -68,7 +70,9 @@ public static class ServiceCollectionExtension
 
         //--------------------------------------------------------authorization policies----------------------------------------------------
         services.AddAuthorizationBuilder()
-            .AddPolicy(PolicyNames.HasNationality, builder => builder.RequireClaim(AppClaimsNames.Nationality));//adding a policy in which only users how have a nationality are authorized (u can specify the nationalities u want by adding extra paramters to requireClaim method)
+            .AddPolicy(PolicyNames.HasNationality, builder => builder.RequireClaim(AppClaimsNames.Nationality))//adding a policy in which only users how have a nationality are authorized (u can specify the nationalities u want by adding extra paramters to requireClaim method)
+            .AddPolicy(PolicyNames.LessThan20, builder => builder.AddRequirements( new MinimumAgeRequirment { MinimumAge = 20}));//adding custom policy where the user must be at a certain age 
 
+        services.AddScoped<IAuthorizationHandler, MinimumAgeRequirmentHandler>();//registring the service that adds the LessThan20 policy
     }
 }
