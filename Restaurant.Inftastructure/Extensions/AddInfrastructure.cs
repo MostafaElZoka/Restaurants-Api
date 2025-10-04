@@ -8,6 +8,7 @@ using Microsoft.IdentityModel.Tokens;
 using Restaurant.Application.Authentication;
 using Restaurant.Domain.Entities;
 using Restaurant.Domain.Repositories;
+using Restaurant.Inftastructure.Authorization;
 using Restaurant.Inftastructure.DishesRepos;
 using Restaurant.Inftastructure.Identity.Auth;
 using Restaurant.Inftastructure.Presistence;
@@ -30,6 +31,7 @@ public static class ServiceCollectionExtension
         services.AddScoped<IDishReposatory, DishRepository>();
 
         services.AddIdentity<User, IdentityRole>() // this reqisters services like usermanager, signinmanager and rolemanager
+            .AddClaimsPrincipalFactory<RestaurantsUserClaimsPrincipalFactory>()//extending the token claims like nationality and DOB
             .AddEntityFrameworkStores<RestaurantDbContext>() // this adds the identity table to the EF dbcontext
             .AddDefaultTokenProviders();     //this adds identity tokens required for features like resetting password and email confirmation(not neccessary)
 

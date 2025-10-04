@@ -23,9 +23,11 @@ public class JwtTokenGenerator(IOptions<JwtSettings> jwtsettings,UserManager<Use
         var Claims = new List<Claim>
         {
             new Claim(JwtRegisteredClaimNames.Sub,user.Id),//sub is used for saving the id
-            new Claim("fullName", user.FullName), 
+            new Claim("fullName", user.FullName),
             new Claim(JwtRegisteredClaimNames.Email,user.Email),
             new Claim(JwtRegisteredClaimNames.Jti,Guid.NewGuid().ToString()),
+            new Claim("DateOfBirth", user.DateOfBirth!.Value.ToString("yyyy-MM-dd")),
+            new Claim("Nationality", user.Nationality!)
         };
         Claims.AddRange(roles.Select(r => new Claim(ClaimTypes.Role, r)));  
 
