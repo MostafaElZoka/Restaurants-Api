@@ -11,6 +11,7 @@ using Restaurant.Application.Restaurants.Queries;
 using Restaurant.Application.Restaurants.Queries.Get_Restaurant_By_Id;
 using Restaurant.Domain.Constants;
 using Restaurant.Domain.Entities;
+using Restaurant.Inftastructure.Authorization;
 using System.Threading.Tasks;
 
 namespace Restaurant.Controllers
@@ -29,6 +30,7 @@ namespace Restaurant.Controllers
             return Ok(restaurants); 
         }
         [HttpGet("{id}")]
+        [Authorize(Policy = PolicyNames.HasNationality)]
         public async Task<ActionResult<RestaurantsDTO>> GetRestaurantById([FromRoute]int id)
         {
             var restaurant = await mediator.Send(new GetRestaurantByIdQuery() { Id = id});

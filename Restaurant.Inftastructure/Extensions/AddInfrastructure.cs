@@ -26,15 +26,19 @@ public static class ServiceCollectionExtension
         var connectionString = configuration.GetConnectionString("restaurantDB");
         services.AddDbContext<RestaurantDbContext>(x=>x.UseSqlServer(connectionString)
         .EnableSensitiveDataLogging());
+        //---------------------------------------------------- Registring Services -------------------------------------------------------
+
         services.AddScoped<IRestaurantSeeder, RestaurantSeeder>();
         services.AddScoped<IRestaurantRepository, RestaurantRepository>();
         services.AddScoped<IDishReposatory, DishRepository>();
 
+        //------------------------------------------------------   Identity   ------------------------------------------------------------
+
         services.AddIdentity<User, IdentityRole>() // this reqisters services like usermanager, signinmanager and rolemanager
-            .AddClaimsPrincipalFactory<RestaurantsUserClaimsPrincipalFactory>()//extending the token claims like nationality and DOB
             .AddEntityFrameworkStores<RestaurantDbContext>() // this adds the identity table to the EF dbcontext
             .AddDefaultTokenProviders();     //this adds identity tokens required for features like resetting password and email confirmation(not neccessary)
 
+        //------------------------------------------------------------ JWT ------------------------------------------------------------------------
         services.AddScoped<IJwtTokenGenerator, JwtTokenGenerator>(); 
 
         services.Configure<JwtSettings>(configuration.GetSection("JwtSettings"));//maps the jwt settings from the appsettings.json to the jwtsettings class
@@ -62,6 +66,9 @@ public static class ServiceCollectionExtension
             };
         });
 
+        //--------------------------------------------------------authorization policies----------------------------------------------------
+        services.AddAuthorizationBuilder()
+            .AddPolicy(PolicyNames.HasNationality, builder => builder.RequireClaim(AppClaimsNames.Nationality));//adding a policy in which only users how have a nationality are authorized (u can specify the nationalities u want by adding extra paramters to requireClaim method)
 
     }
 }
