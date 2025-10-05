@@ -7,6 +7,7 @@ using Restaurant.Domain.Interfaces;
 
 namespace Restaurant.Inftastructure.Authorization.Services
 {
+    //checking whether the user is authorized to request a certain operation on a restaurant via RestaurantAuthorizationServices
     public class RestaurantAuthorizationServices(ILogger<RestaurantAuthorizationServices> logger, IUserContext userContext) : IRestaurantAuthorizationServices
     {
         public bool Authorize(Restaurantt restaurant, ResourceOperations resourceOperations)

@@ -75,9 +75,11 @@ public static class ServiceCollectionExtension
         //--------------------------------------------------------authorization policies----------------------------------------------------
         services.AddAuthorizationBuilder()
             .AddPolicy(PolicyNames.HasNationality, builder => builder.RequireClaim(AppClaimsNames.Nationality))//adding a policy in which only users how have a nationality are authorized (u can specify the nationalities u want by adding extra paramters to requireClaim method)
-            .AddPolicy(PolicyNames.LessThan20, builder => builder.AddRequirements( new MinimumAgeRequirment { MinimumAge = 20}));//adding custom policy where the user must be at a certain age 
+            .AddPolicy(PolicyNames.LessThan20, builder => builder.AddRequirements(new MinimumAgeRequirment { MinimumAge = 20 }))//adding custom policy where the user must be at a certain age 
+            .AddPolicy(PolicyNames.OwnsAtLeast2, builder => builder.AddRequirements(new OwnsAtLeast2Requirment { OwnedRestaurantsCount = 2}));
 
         services.AddScoped<IAuthorizationHandler, MinimumAgeRequirmentHandler>();//registring the service that adds the LessThan20 policy
+        services.AddScoped<IAuthorizationHandler, OwnsAtLeast2RequirmentHandler>();
 
         services.AddScoped<IRestaurantAuthorizationServices, RestaurantAuthorizationServices>();//registering the service that authorizes whether the user can delete / update a restaurant or not
     }

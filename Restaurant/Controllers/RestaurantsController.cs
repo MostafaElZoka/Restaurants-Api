@@ -24,9 +24,11 @@ namespace Restaurant.Controllers
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<RestaurantsDTO>))] // this is to set the expected returned status code and the type of the returned object
         [AllowAnonymous]
-        public async Task<ActionResult<IEnumerable<RestaurantsDTO>>> GetAllRestaurants()
+        //[Authorize(Policy =PolicyNames.OwnsAtLeast2)]
+        public async Task<ActionResult<IEnumerable<RestaurantsDTO>>> GetAllRestaurants([FromQuery] GetAllRestaurantsQuery query)
         {
-            var restaurants =await mediator.Send(new GetAllRestaurantsQuery());
+            //var restaurants =await mediator.Send(new GetAllRestaurantsQuery()); //without pagination
+            var restaurants = await mediator.Send(query); // with pagination
             return Ok(restaurants); 
         }
         [HttpGet("{id}")]
