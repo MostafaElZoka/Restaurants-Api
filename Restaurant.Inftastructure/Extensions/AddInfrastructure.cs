@@ -8,9 +8,11 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using Restaurant.Application.Authentication;
 using Restaurant.Domain.Entities;
+using Restaurant.Domain.Interfaces;
 using Restaurant.Domain.Repositories;
 using Restaurant.Inftastructure.Authorization;
 using Restaurant.Inftastructure.Authorization.Requirments;
+using Restaurant.Inftastructure.Authorization.Services;
 using Restaurant.Inftastructure.DishesRepos;
 using Restaurant.Inftastructure.Identity.Auth;
 using Restaurant.Inftastructure.Presistence;
@@ -18,6 +20,8 @@ using Restaurant.Inftastructure.RestaurantsRepos;
 using Restaurant.Inftastructure.Seeders;
 using System.Runtime.CompilerServices;
 using System.Text;
+using Restaurant.Domain.Interfaces;
+using Restaurant.Inftastructure.Authorization.Services;
 
 namespace Restaurant.Inftastructure.Extensions;
 
@@ -74,5 +78,7 @@ public static class ServiceCollectionExtension
             .AddPolicy(PolicyNames.LessThan20, builder => builder.AddRequirements( new MinimumAgeRequirment { MinimumAge = 20}));//adding custom policy where the user must be at a certain age 
 
         services.AddScoped<IAuthorizationHandler, MinimumAgeRequirmentHandler>();//registring the service that adds the LessThan20 policy
+
+        services.AddScoped<IRestaurantAuthorizationServices, RestaurantAuthorizationServices>();//registering the service that authorizes whether the user can delete / update a restaurant or not
     }
 }

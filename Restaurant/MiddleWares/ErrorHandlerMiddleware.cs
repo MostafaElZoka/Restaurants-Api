@@ -1,4 +1,5 @@
-﻿using Restaurant.Domain.Exceptions;
+﻿using Microsoft.AspNetCore.Http.HttpResults;
+using Restaurant.Domain.Exceptions;
 
 namespace Restaurant.MiddleWares
 {
@@ -15,6 +16,12 @@ namespace Restaurant.MiddleWares
                 logger.LogWarning("not found exception");
                 context.Response.StatusCode = 404;
                 await context.Response.WriteAsync(notfound.Message);
+            }
+            catch(ForbidException forbid)
+            {
+                logger.LogWarning("forbidden exception");
+                context.Response.StatusCode = 403;
+                await context.Response.WriteAsync($"{forbid.Message} access forbidden");
             }
             catch (Exception ex)
             {
