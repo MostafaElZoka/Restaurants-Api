@@ -23,7 +23,7 @@ public class UpdateRestaurantCommandHandler(IRestaurantRepository restaurantRepo
         if (restaurant == null)
         {
             //return false;
-           throw new NotFoundExceptionHandler(nameof(request),request.Id.ToString());
+           throw new NotFoundExceptionHandler(nameof(Restaurantt),request.Id.ToString());
         }
 
         if (!restaurantAuthorizationServices.Authorize(restaurant, ResourceOperations.Update)) //if the user is not the owner of the restaurant

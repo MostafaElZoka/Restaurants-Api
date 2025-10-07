@@ -17,14 +17,14 @@ namespace Restaurant.Inftastructure.RestaurantsRepos
         public async Task<int> Create(Restaurantt restaurant)
         {
             dbContext.Restaurants.Add(restaurant);
-            await dbContext.SaveChangesAsync();
+            await SaveChanges();
             return restaurant.Id;
         }
 
         public async Task Delete(Restaurantt Entity)
         {
             dbContext.Restaurants.Remove(Entity);
-            await dbContext.SaveChangesAsync();
+            await SaveChanges();
         }
 
         public async Task<IEnumerable<Restaurantt>> GetAllAsync()
@@ -73,10 +73,15 @@ namespace Restaurant.Inftastructure.RestaurantsRepos
             return restaurant;
         }
 
+        public async Task SaveChanges()
+        {
+            await dbContext.SaveChangesAsync();
+        }
+
         public async Task Update(Restaurantt entity)
         {
             dbContext.Restaurants.Update(entity);
-            await dbContext.SaveChangesAsync();
+            await SaveChanges();
         }
     }
 }

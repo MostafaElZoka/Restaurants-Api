@@ -20,5 +20,6 @@ namespace Restaurant.Domain.Repositories
                                                                     int pageNumber,
                                                                     string? sortBy,
                                                                     SortDirection? sortDirection);
+        public Task SaveChanges();
     }
 }
