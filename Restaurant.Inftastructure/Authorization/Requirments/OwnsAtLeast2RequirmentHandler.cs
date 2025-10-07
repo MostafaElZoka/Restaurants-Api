@@ -9,7 +9,7 @@ using Restaurant.Inftastructure.RestaurantsRepos;
 
 namespace Restaurant.Inftastructure.Authorization.Requirments;
 
-public class OwnsAtLeast2RequirmentHandler(ILogger<OwnsAtLeast2RequirmentHandler> logger, IUserContext userContext, UserManager<User> userManager) : AuthorizationHandler<OwnsAtLeast2Requirment>
+internal class OwnsAtLeast2RequirmentHandler(ILogger<OwnsAtLeast2RequirmentHandler> logger, IUserContext userContext, UserManager<User> userManager) : AuthorizationHandler<OwnsAtLeast2Requirment>
 {
     protected override async Task HandleRequirementAsync(AuthorizationHandlerContext context, OwnsAtLeast2Requirment requirement)
     {
