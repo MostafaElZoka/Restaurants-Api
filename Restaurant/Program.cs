@@ -1,13 +1,9 @@
-using Microsoft.AspNetCore.Diagnostics;
 using Restaurant.Application.Extensions;
 using Restaurant.Extensions;
 using Restaurant.Inftastructure.Extensions;
 using Restaurant.Inftastructure.Seeders;
 using Restaurant.MiddleWares;
 using Serilog;
-using Serilog.Events;
-using Serilog.Formatting.Compact;
-using System.Threading.Tasks;
 namespace Restaurant
 {
     public class Program
