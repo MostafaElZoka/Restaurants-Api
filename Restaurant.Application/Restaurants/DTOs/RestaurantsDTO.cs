@@ -15,6 +15,7 @@ public class RestaurantsDTO
     public string? City { get; set; }
     public string? Street { get; set; }
     public string? PostalCode { get; set; }
+    public string? LogoSasUrl { get;  set; }
     public List<DishesDTO> Dishes { get; set; } = new List<DishesDTO>();
 
     //public static RestaurantsDTO? FromEntity(Restaurantt? r)//a method that maps dto instead of manually mapping each time (no longer need)

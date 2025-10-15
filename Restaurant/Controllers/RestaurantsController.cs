@@ -2,10 +2,12 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.FileProviders;
 using Restaurant.Application.Restaurants;
 using Restaurant.Application.Restaurants.Commands.Create_Restaurant;
 using Restaurant.Application.Restaurants.Commands.Delete_Restaurant;
 using Restaurant.Application.Restaurants.Commands.Update_Restaurant;
+using Restaurant.Application.Restaurants.Commands.Upload_Logo;
 using Restaurant.Application.Restaurants.DTOs;
 using Restaurant.Application.Restaurants.Queries;
 using Restaurant.Application.Restaurants.Queries.Get_Restaurant_By_Id;
@@ -32,7 +34,7 @@ namespace Restaurant.Controllers
             return Ok(restaurants); 
         }
         [HttpGet("{id}")]
-        [Authorize(Policy = PolicyNames.HasNationality)]
+        //[Authorize(Policy = PolicyNames.HasNationality)]
         public async Task<ActionResult<RestaurantsDTO>> GetRestaurantById([FromRoute]int id)
         {
             var restaurant = await mediator.Send(new GetRestaurantByIdQuery() { Id = id});
@@ -74,6 +76,21 @@ namespace Restaurant.Controllers
                 return NoContent();
 
             //return NotFound(); there's no need to return not found because the notfoundexception we made will be fired by mediator
+        }
+        [HttpPost("{id}/logo")]
+        public async Task<IActionResult> UploadLogo([FromRoute] int id, IFormFile file)
+        {
+            using var stram = file.OpenReadStream();
+
+            var command = new UploadLogoCommand()
+            {
+                FileName = file.FileName,
+                RestaurantId = id,
+                File = stram
+            };
+
+            await mediator.Send(command);
+            return NoContent();
         }
     }
 }

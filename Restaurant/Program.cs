@@ -10,43 +10,54 @@ namespace Restaurant
     {
         public static async Task Main(string[] args)
         {
-            var builder = WebApplication.CreateBuilder(args);
-
-            // Add services to the container.
-
-
-            builder.AddPresentation();
-            builder.Services.AddApplication();
-            builder.Services.AddInfrastructure(builder.Configuration);
-
-
-
-            var app = builder.Build();
-
-            var scope = app.Services.CreateScope();
-            var seeder=scope.ServiceProvider.GetRequiredService<IRestaurantSeeder>();
-            await seeder.Seed();
-
-            // Configure the HTTP request pipeline.
-            if (app.Environment.IsDevelopment())
+            try
             {
-                app.UseSwagger();
-                app.UseSwaggerUI();
+                var builder = WebApplication.CreateBuilder(args);
+
+                // Add services to the container.
+
+
+                builder.AddPresentation();
+                builder.Services.AddApplication();
+                builder.Services.AddInfrastructure(builder.Configuration);
+
+
+
+                var app = builder.Build();
+
+                var scope = app.Services.CreateScope();
+                var seeder = scope.ServiceProvider.GetRequiredService<IRestaurantSeeder>();
+                await seeder.Seed();
+
+                // Configure the HTTP request pipeline.
+                if (app.Environment.IsDevelopment())
+                {
+                    app.UseSwagger();
+                    app.UseSwaggerUI();
+                }
+
+                app.UseMiddleware<ErrorHandlerMiddleware>();//using the middleware
+                app.UseMiddleware<TimeLoggingMiddleware>();
+
+                app.UseSerilogRequestLogging(); //middleware for serilog
+                app.UseHttpsRedirection();
+
+                app.UseAuthentication();
+                app.UseAuthorization();
+
+
+                app.MapControllers();
+
+                app.Run();
             }
-
-            app.UseMiddleware<ErrorHandlerMiddleware>();//using the middleware
-            app.UseMiddleware<TimeLoggingMiddleware>();
-
-            app.UseSerilogRequestLogging(); //middleware for serilog
-            app.UseHttpsRedirection();
-
-            app.UseAuthentication();
-            app.UseAuthorization();
-
-
-            app.MapControllers();
-
-            app.Run();
+            catch (Exception ex)
+            {
+                Log.Fatal(ex, "application startup failed");
+            }
+            finally
+            {
+                Log.CloseAndFlush();
+            }
         }
     }
 }

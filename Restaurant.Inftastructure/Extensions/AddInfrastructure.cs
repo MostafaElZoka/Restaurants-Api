@@ -22,6 +22,8 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using Restaurant.Domain.Interfaces;
 using Restaurant.Inftastructure.Authorization.Services;
+using Restaurant.Inftastructure.Configurations;
+using Restaurant.Inftastructure.BlobStorage;
 
 namespace Restaurant.Inftastructure.Extensions;
 
@@ -82,5 +84,8 @@ public static class ServiceCollectionExtension
         services.AddScoped<IAuthorizationHandler, OwnsAtLeast2RequirmentHandler>();
 
         services.AddScoped<IRestaurantAuthorizationServices, RestaurantAuthorizationServices>();//registering the service that authorizes whether the user can delete / update a restaurant or not
+        //-----------------------------------------------------BlobStorage Configurations---------------------------------------------------------
+        services.Configure<BlobStorageSettings>(configuration.GetSection("BlobStorage"));
+        services.AddScoped<IBlobStrorageService, BlobStorageService>();
     }
 }
