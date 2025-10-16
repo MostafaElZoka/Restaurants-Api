@@ -11,6 +11,7 @@ internal class RestaurantSeeder(RestaurantDbContext db): IRestaurantSeeder
 {
     public async Task Seed()
     {
+        
         if(db.Database.GetPendingMigrations().Any())
         {
             await db.Database.MigrateAsync();

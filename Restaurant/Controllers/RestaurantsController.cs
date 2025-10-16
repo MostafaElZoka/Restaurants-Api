@@ -84,7 +84,7 @@ namespace Restaurant.Controllers
 
             var command = new UploadLogoCommand()
             {
-                FileName = file.FileName,
+                FileName = $"{id}-{file.FileName}",
                 RestaurantId = id,
                 File = stram
             };
