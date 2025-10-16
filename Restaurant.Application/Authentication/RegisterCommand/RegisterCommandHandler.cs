@@ -31,9 +31,9 @@ public class RegisterCommandHandler(ILogger<RegisterCommandHandler> logger,UserM
 
             if (!result.Succeeded)
             {
-                var errors = result.Errors.Select(e => e.Description);
+                var errors = result.Errors.Select(e => e.Description).ToList();
                 logger.LogError("User registration failed: {Errors}", errors);
-                throw new Exception($"Registration failed: {errors}");
+                throw new Exception($"Registration failed: {string.Join(", ", errors)}");
             }
 
             return await jwtTokenGenerator.GenerateToken(user);
