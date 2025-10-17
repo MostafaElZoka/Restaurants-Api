@@ -1,0 +1,31 @@
+name: restaurants-api
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+    branches: 
+      - master
+  workflow_dispatch:
+  
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5.0.0
+        
+      - name: Setup .NET Core SDK
+        uses: actions/setup-dotnet@v5.0.0
+        with:
+          dotnet-version: 8.0.x # specifying the dotnet version to be built
+          
+      - name: restore dependencies
+        run: dotnet restore Restaurant/Restaurant.sln
+        
+      - name: build
+        run: dotnet build Restaurant/Restaurant.sln --no-restore # skipping restoring because in the previous step i already restored dependencies
+        
+      - name: test
+        run: dotnet test Restaurant/Restaurant.sln
+    
