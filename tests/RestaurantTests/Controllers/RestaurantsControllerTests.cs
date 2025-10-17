@@ -3,6 +3,9 @@ using Microsoft.AspNetCore.Authorization.Policy;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
+using Moq;
+using Restaurant.Inftastructure.Seeders;
 using RestaurantTests.Controllers;
 using System.Threading.Tasks;
 using Xunit;
@@ -12,6 +15,7 @@ namespace Restaurant.Controllers.Tests
     public class RestaurantsControllerTests : IClassFixture<WebApplicationFactory<Program>>
     {
         private readonly WebApplicationFactory<Program> _applicationFactory;
+        private readonly Mock<IRestaurantSeeder> _restaurantSeederMock = new();
         public RestaurantsControllerTests(WebApplicationFactory<Program> factory)
         {
             _applicationFactory = factory.WithWebHostBuilder(builder =>
@@ -19,6 +23,8 @@ namespace Restaurant.Controllers.Tests
                 builder.ConfigureTestServices(services =>
                 {
                     services.AddSingleton<IPolicyEvaluator, FakePolicyEvaluator>(); //injecting the fake policy evaluator
+
+                    services.Replace(ServiceDescriptor.Scoped(typeof(IRestaurantSeeder), _ => _restaurantSeederMock.Object));
                 });
             });
         }
