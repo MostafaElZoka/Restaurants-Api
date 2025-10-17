@@ -18,10 +18,10 @@ internal class OwnsAtLeast2RequirmentHandler(ILogger<OwnsAtLeast2RequirmentHandl
         //var dbUser = await userManager.Users.Include(u => u.RestaurantsOwned).FirstOrDefaultAsync(u => u.Id == user.Id);
 
         //var count = dbUser.RestaurantsOwned.Count();
-         var count = await userManager.Users
+         var count = userManager.Users
             .Where(u => u.Id == user.Id)
             .SelectMany(u => u.RestaurantsOwned)
-            .CountAsync();
+            .Count();
 
         if (count < 2)
         {
