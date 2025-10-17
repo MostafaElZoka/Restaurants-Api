@@ -21,11 +21,11 @@ jobs:
           dotnet-version: 8.0.x # specifying the dotnet version to be built
           
       - name: restore dependencies
-        run: dotnet restore Restaurant.sln
+        run: dotnet restore Restaurant/Restaurant.sln
         
       - name: build
-        run: dotnet build Restaurant.sln --no-restore # skipping restoring because in the previous step i already restored dependencies
+        run: dotnet build Restaurant/Restaurant.sln --no-restore # skipping restoring because in the previous step i already restored dependencies
         
       - name: test
-        run: dotnet test Restaurant.sln
+        run: dotnet test Restaurant/Restaurant.sln
     
