@@ -1,0 +1,72 @@
+name: restaurants-api-cd
+
+on:
+  push:
+    branches: 
+      - master
+  workflow_dispatch:
+  
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5.0.0
+        
+      - name: Setup .NET Core SDK
+        uses: actions/setup-dotnet@v5.0.0
+        with:
+          dotnet-version: 8.0.x # specifying the dotnet version to be built
+          
+      - name: restore dependencies
+        run: dotnet restore Restaurant/Restaurant.sln
+        
+      - name: build
+        run: dotnet build Restaurant/Restaurant.sln --no-restore -c Release # skipping restoring because in the previous step i already restored dependencies
+        
+      - name: publish
+        run: dotnet publish ./Restaurant/Restaurant.csproj --no-build -o ${{env.DOTNET_ROOT}}/api 
+        
+      - name: Upload a Build Artifact
+        uses: actions/upload-artifact@v4.6.2
+        with: 
+            name: api-artifact
+            path: ${{env.DOTNET_ROOT}}/api
+            
+  deploy-to-dev:
+      runs-on: ubuntu-latest
+      environment: 
+        name: 'Dev'
+        url: ${{steps.deploy-to-webapp.outputs.webapp-url}}
+      needs: build
+      steps:
+        - name: Download a Build Artifact
+          uses: actions/download-artifact@v5.0.0
+          with:
+            name: api-artifact
+        - name: Azure WebApp
+          id: deploy-to-webapp #the id needed to be refrenced in the url 
+          uses: Azure/webapps-deploy@v2.2.17
+          with:
+            app-name: 'restaurants-api'
+            publish-profile: ${{secrets.PUBLISH_PROFILE_DEV}}
+
+  deploy-to-prod:
+      runs-on: ubuntu-latest
+      environment:
+        name: 'Prod'
+        url: ${{steps.deploy-to-webapp.outputs.webapp-url}}
+      needs: deploy-to-dev
+      steps:
+        - name: Download a Build Artifact
+          uses: actions/download-artifact@v5.0.0
+          with:
+            name: api-artifact
+        - name: Azure WebApp
+          id: deploy-to-webapp
+          uses: Azure/webapps-deploy@v2.2.17
+          with:
+            app-name: 'restaurants-api-production'
+            publish-profile: ${{secrets.PUBLISH_PROFILE_PROD}}
+    
+    
