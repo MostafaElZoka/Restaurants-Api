@@ -19,7 +19,7 @@ namespace Restaurant.Controllers
             }
             catch (Exception ex)
             {
-                return StatusCode(500, new{ error = ex.Message });
+                return BadRequest( new{ error = ex.Message });
             }
         }
 
